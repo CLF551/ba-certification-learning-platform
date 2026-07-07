@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>W07 · Progress Dashboard | Learn Smarter</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+    background: #fbf3e0;
+    color: #4a403a;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .frame {
+    width: 100%;
+    max-width: 420px;
+    background: #fdf9f0;
+    border-radius: 28px;
+    padding: 8px;
+    box-shadow: 0 0 0 1px #d4b89680, 0 12px 40px -8px rgba(74,64,58,0.12);
+  }
+
+  .frame.wide { max-width: 860px; }
+
+  .screen {
+    background: #fdf9f0;
+    border-radius: 22px;
+    padding: 0;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .wf-label {
+    position: absolute;
+    top: 14px; left: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: #d4b896;
+    z-index: 2;
+  }
+  .wf-label span { color: #c1666b; }
+  .wf-dims {
+    position: absolute;
+    bottom: 10px; left: 0; right: 0;
+    text-align: center;
+    font-size: 10px;
+    color: #d4b896;
+    letter-spacing: 0.3px;
+    z-index: 2;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid #e8dcc8;
+    margin-top: 8px;
+  }
+
+  .topbar .logo {
+    font-size: 16px;
+    font-weight: 700;
+    color: #4a403a;
+    letter-spacing: -0.3px;
+  }
+
+  .topbar .right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .topbar .search-box {
+    display: flex;
+    align-items: center;
+    background: #fcf8ee;
+    border: 1px solid #e8dcc8;
+    border-radius: 8px;
+    padding: 5px 10px;
+    gap: 4px;
+    max-width: 160px;
+  }
+
+  .topbar .search-box .icon { font-size: 11px; color: #d4b896; }
+
+  .topbar .search-box input {
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 11px;
+    color: #4a403a;
+    width: 100%;
+    outline: none;
+  }
+
+  .topbar .search-box input::placeholder { color: #c8b89a; }
+
+  .topbar .progress-badge {
+    font-size: 12px;
+    font-weight: 600;
+    color: #f4a900;
+    background: #fcf3dc;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .topbar .menu-icon {
+    font-size: 18px;
+    color: #d4b896;
+  }
+
+  .content {
+    padding: 18px 20px 32px;
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .back-link {
+    font-size: 12px;
+    font-weight: 500;
+    color: #f4a900;
+    margin-bottom: 10px;
+    display: inline-block;
+    cursor: default;
+  }
+
+  .page-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    color: #4a403a;
+  }
+
+  /* ── overall progress ── */
+  .overall-card {
+    background: linear-gradient(135deg, #fcf8ee 0%, #fcf3dc 100%);
+    border: 1px solid #e8dcc8;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  .overall-card .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+  }
+
+  .overall-card .stat-row .big {
+    font-size: 28px;
+    font-weight: 700;
+    color: #f4a900;
+  }
+
+  .overall-card .stat-row .label {
+    font-size: 13px;
+    color: #a0907a;
+  }
+
+  .overall-card .bar-track {
+    width: 100%;
+    height: 8px;
+    background: #e8dcc8;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .overall-card .bar-track .fill {
+    width: 45%;
+    height: 100%;
+    background: linear-gradient(90deg, #d4b896, #f4a900);
+    border-radius: 6px;
+  }
+
+  .overall-card .sub-text {
+    font-size: 11px;
+    color: #b8a88a;
+    margin-top: 6px;
+  }
+
+  /* ── module progress ── */
+  .module-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .mod-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: #fcf8ee;
+    border: 1px solid #e8dcc8;
+    border-radius: 10px;
+    font-size: 12px;
+  }
+
+  .mod-row .m-label {
+    width: 140px;
+    flex-shrink: 0;
+    font-weight: 500;
+    color: #4a403a;
+  }
+
+  .mod-row .m-bar-track {
+    flex: 1;
+    height: 6px;
+    background: #e8dcc8;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .mod-row .m-bar-track .m-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #d4b896, #f4a900);
+  }
+
+  .mod-row .m-status {
+    flex-shrink: 0;
+    font-size: 12px;
+    width: 60px;
+    text-align: right;
+    font-weight: 500;
+  }
+
+  .mod-row .m-status.done   { color: #4a403a; }
+  .mod-row .m-status.warn   { color: #c1666b; }
+  .mod-row .m-status.todo   { color: #d4b896; }
+
+  /* ── weak / stats grid ── */
+  .info-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .info-card {
+    background: #fcf8ee;
+    border: 1px solid #e8dcc8;
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+
+  .info-card .info-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: #c1666b;
+    letter-spacing: 0.3px;
+    margin-bottom: 8px;
+  }
+
+  .info-card .info-title.gold { color: #f4a900; }
+
+  .info-card ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .info-card ul li {
+    font-size: 12px;
+    line-height: 1.8;
+    color: #5a4e3e;
+  }
+
+  .info-card ul li .warn { color: #c1666b; font-weight: 600; }
+  .info-card ul li .tag { color: #a0907a; }
+
+  .action-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    flex: 1;
+    min-width: 130px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    text-align: center;
+    border: none;
+    cursor: default;
+  }
+
+  .btn-primary {
+    background: #f4a900;
+    color: #fff;
+  }
+
+  .btn-secondary {
+    background: #fcf8ee;
+    color: #4a403a;
+    border: 1px solid #d4b896;
+  }
+
+  @media (min-width: 768px) {
+    .frame.wide .topbar { padding: 20px 28px 16px; }
+    .frame.wide .topbar .search-box { max-width: 240px; }
+    .frame.wide .content { padding: 22px 28px 36px; }
+    .frame.wide .page-title { font-size: 18px; }
+    .frame.wide .overall-card { padding: 24px 28px; }
+    .frame.wide .overall-card .stat-row .big { font-size: 34px; }
+    .frame.wide .mod-row { padding: 14px 18px; }
+    .frame.wide .mod-row .m-label { width: 180px; }
+    .frame.wide .info-grid { flex-direction: row; gap: 14px; }
+    .frame.wide .info-card { flex: 1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="frame wide">
+  <div class="screen">
+    <div class="wf-label">W07 <span>·</span> Progress Dashboard</div>
+
+    <div class="topbar">
+      <div class="logo">Learn Smarter</div>
+      <div class="right">
+        <div class="search-box">
+          <span class="icon">&#x1F50D;</span>
+          <input type="text" placeholder="Search..." disabled>
+        </div>
+        <div class="progress-badge">45%</div>
+        <div class="menu-icon">&#x2261;</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="back-link">&larr; Back</div>
+      <div class="page-title">Your Progress — AI-901</div>
+
+      <div class="overall-card">
+        <div class="stat-row">
+          <span class="big">45%</span>
+          <span class="label">15 of 33 topics completed</span>
+        </div>
+        <div class="bar-track"><div class="fill"></div></div>
+        <div class="sub-text">&#x1F4C5; Last studied: Today, 2:30 PM &nbsp;&middot;&nbsp; &#x1F525; Streak: 3 days</div>
+      </div>
+
+      <div class="module-progress">
+        <div class="mod-row">
+          <span class="m-label">Module 1: AI workloads</span>
+          <div class="m-bar-track"><div class="m-fill" style="width:100%;"></div></div>
+          <span class="m-status done">3/3 &#x2705;</span>
+        </div>
+        <div class="mod-row">
+          <span class="m-label">Module 2: Azure AI Services</span>
+          <div class="m-bar-track"><div class="m-fill" style="width:67%;"></div></div>
+          <span class="m-status">4/6</span>
+        </div>
+        <div class="mod-row">
+          <span class="m-label">Module 3: Generative AI</span>
+          <div class="m-bar-track"><div class="m-fill" style="width:25%;"></div></div>
+          <span class="m-status warn">1/4 &#x26A0;</span>
+        </div>
+        <div class="mod-row">
+          <span class="m-label">Module 4: Computer Vision</span>
+          <div class="m-bar-track"><div class="m-fill" style="width:0%;"></div></div>
+          <span class="m-status todo">0/3</span>
+        </div>
+        <div class="mod-row">
+          <span class="m-label">Module 5: NLP</span>
+          <div class="m-bar-track"><div class="m-fill" style="width:0%;"></div></div>
+          <span class="m-status todo">0/3</span>
+        </div>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-title">&#x26A0;&#xFE0F; Weak Topics (score &lt; 70%)</div>
+          <ul>
+            <li>&bull; Identify generative AI workloads <span class="warn">33%</span></li>
+            <li>&bull; Azure Cognitive Services <span class="warn">60%</span></li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <div class="info-title gold">&#x1F4CA; Activity</div>
+          <ul>
+            <li>&#x1F4C5; Last studied: <span class="tag">Today, 2:30 PM</span></li>
+            <li>&#x1F525; Study streak: <span class="tag">3 days</span></li>
+            <li>&#x1F4DD; Quizzes taken: <span class="tag">2</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <div class="btn btn-secondary">&#x1F4DD; Practice Weak Topics</div>
+        <div class="btn btn-primary">&#x1F4D6; Continue Studying</div>
+      </div>
+    </div>
+
+    <p class="wf-dims">mobile · 375 × 667 &nbsp;·&nbsp; desktop · 860 × 640</p>
+  </div>
+</div>
+
+</body>
+</html>

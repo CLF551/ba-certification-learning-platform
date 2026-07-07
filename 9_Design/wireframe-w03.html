@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>W03 · Topic Content | Learn Smarter</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+    background: #fbf3e0;
+    color: #4a403a;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .frame {
+    width: 100%;
+    max-width: 420px;
+    background: #fdf9f0;
+    border-radius: 28px;
+    padding: 8px;
+    box-shadow: 0 0 0 1px #d4b89680, 0 12px 40px -8px rgba(74,64,58,0.12);
+  }
+
+  .frame.wide { max-width: 860px; }
+
+  .screen {
+    background: #fdf9f0;
+    border-radius: 22px;
+    padding: 0;
+    min-height: 560px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .wf-label {
+    position: absolute;
+    top: 14px; left: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: #d4b896;
+    z-index: 2;
+  }
+  .wf-label span { color: #c1666b; }
+
+  .wf-dims {
+    position: absolute;
+    bottom: 10px; left: 0; right: 0;
+    text-align: center;
+    font-size: 10px;
+    color: #d4b896;
+    letter-spacing: 0.3px;
+    z-index: 2;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid #e8dcc8;
+    margin-top: 8px;
+  }
+
+  .topbar .logo {
+    font-size: 16px;
+    font-weight: 700;
+    color: #4a403a;
+    letter-spacing: -0.3px;
+    white-space: nowrap;
+  }
+
+  .topbar .search-box {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background: #fcf8ee;
+    border: 1px solid #e8dcc8;
+    border-radius: 8px;
+    padding: 6px 12px;
+    gap: 6px;
+    max-width: 220px;
+  }
+
+  .topbar .search-box .icon { font-size: 13px; color: #d4b896; }
+
+  .topbar .search-box input {
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 12px;
+    color: #4a403a;
+    width: 100%;
+    outline: none;
+  }
+
+  .topbar .search-box input::placeholder { color: #c8b89a; }
+
+  .topbar .progress-badge {
+    font-size: 12px;
+    font-weight: 600;
+    color: #f4a900;
+    background: #fcf3dc;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .topbar .menu-icon {
+    font-size: 18px;
+    line-height: 1;
+    color: #d4b896;
+    cursor: default;
+  }
+
+  .content {
+    padding: 18px 20px 32px;
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .back-link {
+    font-size: 12px;
+    font-weight: 500;
+    color: #f4a900;
+    margin-bottom: 10px;
+    display: inline-block;
+    cursor: default;
+  }
+
+  .breadcrumb {
+    font-size: 11px;
+    color: #a0907a;
+    margin-bottom: 14px;
+  }
+
+  .breadcrumb strong {
+    color: #4a403a;
+    font-weight: 600;
+  }
+
+  .topic-card {
+    background: #fcf8ee;
+    border: 1px solid #e8dcc8;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  .topic-card p {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #5a4e3e;
+    margin-bottom: 12px;
+  }
+
+  .topic-card ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 14px;
+  }
+
+  .topic-card ul li {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #5a4e3e;
+    padding-left: 16px;
+    position: relative;
+  }
+
+  .topic-card ul li::before {
+    content: "\2022";
+    position: absolute;
+    left: 4px;
+    color: #f4a900;
+    font-weight: 700;
+  }
+
+  .source-tag {
+    font-size: 11px;
+    color: #b8a88a;
+    padding-top: 10px;
+    border-top: 1px solid #e8dcc8;
+  }
+
+  .related-grid {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+
+  .related-chip {
+    flex: 1;
+    min-width: 120px;
+    background: #fcf8ee;
+    border: 1px solid #e8dcc8;
+    border-radius: 10px;
+    padding: 12px 14px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 500;
+    color: #4a403a;
+    cursor: default;
+  }
+
+  .related-chip .ql {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    color: #f4a900;
+    margin-top: 4px;
+    letter-spacing: 0.3px;
+  }
+
+  .action-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    flex: 1;
+    min-width: 130px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    border: none;
+    text-align: center;
+    cursor: default;
+  }
+
+  .btn-primary {
+    background: #f4a900;
+    color: #fff;
+  }
+
+  .btn-secondary {
+    background: #fcf8ee;
+    color: #4a403a;
+    border: 1px solid #d4b896;
+  }
+
+  .btn-secondary .icon { margin-right: 4px; }
+
+  @media (min-width: 768px) {
+    .frame.wide .topbar { padding: 20px 28px 16px; }
+    .frame.wide .topbar .search-box { max-width: 320px; }
+    .frame.wide .topbar .search-box input { font-size: 13px; }
+    .frame.wide .content { padding: 22px 28px 36px; }
+    .frame.wide .topic-card { padding: 24px; }
+    .frame.wide .topic-card p,
+    .frame.wide .topic-card ul li { font-size: 14px; }
+    .frame.wide .related-chip { min-width: 160px; }
+    .frame.wide .action-row { max-width: 500px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="frame wide">
+  <div class="screen">
+    <div class="wf-label">W03 <span>·</span> Topic Content</div>
+
+    <div class="topbar">
+      <div class="logo">Learn Smarter</div>
+      <div class="search-box">
+        <span class="icon">&#x1F50D;</span>
+        <input type="text" placeholder="Search topics..." disabled>
+      </div>
+      <div class="progress-badge">45%</div>
+      <div class="menu-icon">&#x2261;</div>
+    </div>
+
+    <div class="content">
+      <div class="back-link">&larr; Back to Map</div>
+
+      <div class="breadcrumb">
+        Module 1 &gt; <strong>Identify Azure AI services</strong>
+      </div>
+
+      <div class="topic-card">
+        <p>Azure AI services are cloud-based APIs that enable applications to see, hear, speak, understand language, and make decisions. They require no deep ML expertise — developers can integrate AI capabilities with a few lines of code.</p>
+
+        <p>Key service categories include:</p>
+
+        <ul>
+          <li><strong>Vision</strong> — image classification, object detection, OCR, facial recognition</li>
+          <li><strong>Speech</strong> — speech-to-text, text-to-speech, translation, speaker recognition</li>
+          <li><strong>Language</strong> — sentiment analysis, key phrase extraction, language detection, QnA</li>
+          <li><strong>Decision</strong> — anomaly detection, content moderation, personalizer</li>
+        </ul>
+
+        <div class="source-tag">Source: Microsoft Learn — AI-901 Module 1</div>
+      </div>
+
+      <div class="related-grid">
+        <div class="related-chip">
+          Identify AI workloads
+          <span class="ql">Quick Look &rarr;</span>
+        </div>
+        <div class="related-chip">
+          Azure Cognitive Services
+          <span class="ql">Quick Look &rarr;</span>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <div class="btn btn-secondary"><span class="icon">&#x2705;</span> Mark as Reviewed</div>
+        <div class="btn btn-primary">&#x1F4DD; Practice This Module</div>
+      </div>
+    </div>
+
+    <p class="wf-dims">mobile · 375 × 667 &nbsp;·&nbsp; desktop · 860 × 600</p>
+  </div>
+</div>
+
+</body>
+</html>

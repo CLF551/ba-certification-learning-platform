@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>W06 · Quiz Results | Learn Smarter</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+    background: #fbf3e0;
+    color: #4a403a;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .frame {
+    width: 100%;
+    max-width: 420px;
+    background: #fdf9f0;
+    border-radius: 28px;
+    padding: 8px;
+    box-shadow: 0 0 0 1px #d4b89680, 0 12px 40px -8px rgba(74,64,58,0.12);
+  }
+
+  .frame.wide { max-width: 860px; }
+
+  .screen {
+    background: #fdf9f0;
+    border-radius: 22px;
+    padding: 0;
+    min-height: 560px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .wf-label {
+    position: absolute;
+    top: 14px; left: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: #d4b896;
+    z-index: 2;
+  }
+  .wf-label span { color: #c1666b; }
+  .wf-dims {
+    position: absolute;
+    bottom: 10px; left: 0; right: 0;
+    text-align: center;
+    font-size: 10px;
+    color: #d4b896;
+    letter-spacing: 0.3px;
+    z-index: 2;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid #e8dcc8;
+    margin-top: 8px;
+  }
+
+  .topbar .logo {
+    font-size: 16px;
+    font-weight: 700;
+    color: #4a403a;
+    letter-spacing: -0.3px;
+  }
+
+  .topbar .right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .topbar .progress-badge {
+    font-size: 12px;
+    font-weight: 600;
+    color: #f4a900;
+    background: #fcf3dc;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .topbar .menu-icon {
+    font-size: 18px;
+    color: #d4b896;
+  }
+
+  .content {
+    padding: 18px 20px 32px;
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .back-link {
+    font-size: 12px;
+    font-weight: 500;
+    color: #f4a900;
+    margin-bottom: 12px;
+    display: inline-block;
+    cursor: default;
+  }
+
+  .page-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #4a403a;
+  }
+
+  .score-card {
+    background: #fcf8ee;
+    border: 1px solid #e8dcc8;
+    border-radius: 14px;
+    padding: 24px 20px;
+    text-align: center;
+    margin-bottom: 18px;
+  }
+
+  .score-number {
+    font-size: 36px;
+    font-weight: 700;
+    color: #f4a900;
+    line-height: 1;
+  }
+
+  .score-number span { font-size: 16px; font-weight: 500; color: #a0907a; }
+
+  .score-sub {
+    font-size: 12px;
+    color: #a0907a;
+    margin: 4px 0 16px;
+  }
+
+  .score-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+  }
+
+  .score-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+  }
+
+  .score-row .s-label {
+    width: 140px;
+    flex-shrink: 0;
+    color: #4a403a;
+    font-weight: 500;
+  }
+
+  .score-row .s-bar-track {
+    flex: 1;
+    height: 6px;
+    background: #e8dcc8;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .score-row .s-bar-track .s-fill {
+    height: 100%;
+    border-radius: 4px;
+  }
+
+  .score-row .s-bar-track .s-fill.good { background: #f4a900; }
+  .score-row .s-bar-track .s-fill.warn { background: #c1666b; }
+  .score-row .s-bar-track .s-fill.ok   { background: #d4b896; }
+
+  .score-row .s-pct {
+    width: 40px;
+    text-align: right;
+    color: #a0907a;
+    font-size: 11px;
+  }
+
+  .weak-section {
+    background: #fcf8ee;
+    border: 1px solid #e8dcc8;
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 18px;
+  }
+
+  .weak-section .weak-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #c1666b;
+    margin-bottom: 10px;
+    letter-spacing: 0.3px;
+  }
+
+  .weak-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .weak-item .w-name {
+    font-size: 13px;
+    font-weight: 500;
+    flex: 1;
+    color: #4a403a;
+  }
+
+  .weak-item .w-score {
+    font-size: 11px;
+    color: #c1666b;
+    font-weight: 600;
+  }
+
+  .weak-item .btn-sm {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 14px;
+    border-radius: 8px;
+    font-family: inherit;
+    border: none;
+    cursor: default;
+  }
+
+  .weak-item .btn-sm.outline {
+    background: transparent;
+    color: #4a403a;
+    border: 1px solid #d4b896;
+  }
+
+  .weak-item .btn-sm.solid {
+    background: #f4a900;
+    color: #fff;
+  }
+
+  .action-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    flex: 1;
+    min-width: 130px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    text-align: center;
+    border: none;
+    cursor: default;
+  }
+
+  .btn-primary {
+    background: #f4a900;
+    color: #fff;
+  }
+
+  .btn-secondary {
+    background: #fcf8ee;
+    color: #4a403a;
+    border: 1px solid #d4b896;
+  }
+
+  @media (min-width: 768px) {
+    .frame.wide .topbar { padding: 20px 28px 16px; }
+    .frame.wide .content { padding: 22px 28px 36px; }
+    .frame.wide .page-title { font-size: 18px; }
+    .frame.wide .score-card { padding: 28px 32px; }
+    .frame.wide .score-number { font-size: 42px; }
+    .frame.wide .score-row .s-label { width: 180px; }
+    .frame.wide .weak-section { display: flex; align-items: center; gap: 16px; }
+    .frame.wide .weak-section .weak-title { margin-bottom: 0; white-space: nowrap; }
+  }
+</style>
+</head>
+<body>
+
+<div class="frame wide">
+  <div class="screen">
+    <div class="wf-label">W06 <span>·</span> Quiz Results</div>
+
+    <div class="topbar">
+      <div class="logo">Learn Smarter</div>
+      <div class="right">
+        <div class="progress-badge">45%</div>
+        <div class="menu-icon">&#x2261;</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="back-link">&larr; Back to Map</div>
+
+      <div class="page-title">Module 1 Practice — Complete!</div>
+
+      <div class="score-card">
+        <div class="score-number">8 <span>/ 10</span></div>
+        <div class="score-sub">80% correct</div>
+
+        <div class="score-bars">
+          <div class="score-row">
+            <span class="s-label">&#x2705; Identify AI workloads</span>
+            <div class="s-bar-track"><div class="s-fill good" style="width:100%;"></div></div>
+            <span class="s-pct">100%</span>
+          </div>
+          <div class="score-row">
+            <span class="s-label">&#x26A0;&#xFE0F; Azure AI services</span>
+            <div class="s-bar-track"><div class="s-fill ok" style="width:75%;"></div></div>
+            <span class="s-pct">75%</span>
+          </div>
+          <div class="score-row">
+            <span class="s-label">&#x274C; Generative AI</span>
+            <div class="s-bar-track"><div class="s-fill warn" style="width:33%;"></div></div>
+            <span class="s-pct">33%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="weak-section">
+        <div class="weak-title">&#x26A0;&#xFE0F; Weak Topics</div>
+        <div class="weak-item">
+          <span class="w-name">Identify generative AI workloads</span>
+          <span class="w-score">33%</span>
+          <div class="btn-sm outline">Review Topic</div>
+          <div class="btn-sm solid">Retry</div>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <div class="btn btn-secondary">&#x1F4DD; Retake Full Quiz</div>
+        <div class="btn btn-primary">&larr; Back to Knowledge Map</div>
+      </div>
+    </div>
+
+    <p class="wf-dims">mobile · 375 × 667 &nbsp;·&nbsp; desktop · 860 × 600</p>
+  </div>
+</div>
+
+</body>
+</html>

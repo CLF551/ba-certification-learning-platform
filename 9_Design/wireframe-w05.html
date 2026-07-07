@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>W05 · Practice Quiz | Learn Smarter</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+    background: #fbf3e0;
+    color: #4a403a;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .frame {
+    width: 100%;
+    max-width: 420px;
+    background: #fdf9f0;
+    border-radius: 28px;
+    padding: 8px;
+    box-shadow: 0 0 0 1px #d4b89680, 0 12px 40px -8px rgba(74,64,58,0.12);
+  }
+
+  .frame.wide { max-width: 640px; }
+
+  .screen {
+    background: #fdf9f0;
+    border-radius: 22px;
+    padding: 0;
+    min-height: 520px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .wf-label {
+    position: absolute;
+    top: 14px; left: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: #d4b896;
+    z-index: 2;
+  }
+  .wf-label span { color: #c1666b; }
+  .wf-dims {
+    position: absolute;
+    bottom: 10px; left: 0; right: 0;
+    text-align: center;
+    font-size: 10px;
+    color: #d4b896;
+    letter-spacing: 0.3px;
+    z-index: 2;
+  }
+
+  .content {
+    padding: 46px 24px 32px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .back-link {
+    font-size: 12px;
+    font-weight: 500;
+    color: #f4a900;
+    margin-bottom: 14px;
+    display: inline-block;
+    cursor: default;
+  }
+
+  .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .quiz-header .title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #4a403a;
+  }
+
+  .quiz-header .count {
+    font-size: 12px;
+    color: #a0907a;
+  }
+
+  .progress-track {
+    width: 100%;
+    height: 6px;
+    background: #e8dcc8;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+
+  .progress-track .fill {
+    width: 30%;
+    height: 100%;
+    background: linear-gradient(90deg, #d4b896, #f4a900);
+    border-radius: 4px;
+  }
+
+  .question-card {
+    background: #fcf8ee;
+    border: 1px solid #e8dcc8;
+    border-radius: 14px;
+    padding: 24px 20px;
+    flex: 1;
+  }
+
+  .question-card .q-text {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #4a403a;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid #e8dcc8;
+    border-radius: 10px;
+    background: #fdf9f0;
+    cursor: default;
+    font-size: 13px;
+    color: #4a403a;
+  }
+
+  .option .radio {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid #d4b896;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .option.selected {
+    border-color: #f4a900;
+    background: #fcf3dc;
+  }
+
+  .option.selected .radio {
+    border-color: #f4a900;
+  }
+
+  .option.selected .radio::after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #f4a900;
+  }
+
+  .option .label {
+    font-weight: 500;
+    color: #a0907a;
+    flex-shrink: 0;
+  }
+
+  .btn-submit {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    border: none;
+    background: #f4a900;
+    color: #fff;
+    cursor: default;
+    text-align: center;
+  }
+
+  @media (min-width: 768px) {
+    .frame.wide .content { padding: 50px 32px 36px; }
+    .frame.wide .question-card { padding: 28px 24px; }
+    .frame.wide .question-card .q-text { font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="frame wide">
+  <div class="screen">
+    <div class="wf-label">W05 <span>·</span> Practice Quiz</div>
+
+    <div class="content">
+      <div class="back-link">&larr; Back to Module</div>
+
+      <div class="quiz-header">
+        <span class="title">Module 1 Practice</span>
+        <span class="count">Question 3 of 10</span>
+      </div>
+
+      <div class="progress-track">
+        <div class="fill" style="width:30%;"></div>
+      </div>
+
+      <div class="question-card">
+        <p class="q-text">Which Azure service provides pre-built APIs for natural language processing tasks such as sentiment analysis and key phrase extraction?</p>
+
+        <div class="options">
+          <div class="option">
+            <div class="radio"></div>
+            <span class="label">A.</span> Azure Machine Learning
+          </div>
+          <div class="option selected">
+            <div class="radio"></div>
+            <span class="label">B.</span> Azure Cognitive Services — Language
+          </div>
+          <div class="option">
+            <div class="radio"></div>
+            <span class="label">C.</span> Azure Bot Service
+          </div>
+          <div class="option">
+            <div class="radio"></div>
+            <span class="label">D.</span> Azure OpenAI Service
+          </div>
+        </div>
+
+        <div class="btn-submit">Submit</div>
+      </div>
+    </div>
+
+    <p class="wf-dims">mobile · 375 × 667 &nbsp;·&nbsp; desktop · 640 × 560</p>
+  </div>
+</div>
+
+</body>
+</html>
